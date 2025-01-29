@@ -14,6 +14,9 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT||8080;
+
+mongoose.set('strictQuery', true);
+
 const connection = mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log("Conectado a MongoDB"))
     .catch((error) => console.error("Error de conexión a MongoDB:", error));
