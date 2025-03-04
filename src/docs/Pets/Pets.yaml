@@ -1,0 +1,130 @@
+paths:
+  /api/pets:
+    get:
+      summary: Obtenemos todas las mascotas
+      description: Obtenemos todas las mascotas registradas en la base de datos.
+      tags:
+        - Pets
+      responses:
+        "200":
+          description: Lista de mascotas recuperada correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  payload:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Pet'
+        "500":
+          description: Error en el servidor
+
+    post:
+      summary: Creamos una nueva mascota
+      description: Crea una nueva mascota en la base de datos.
+      tags:
+        - Pets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+      responses:
+        "201":
+          description: Mascota creada correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        "400":
+          description: Datos incompletos
+        "500":
+          description: Error en el servidor
+
+  /api/pets/{pid}:
+    parameters:
+      - name: pid
+        in: path
+        required: true
+        description: ID de la mascota
+        schema:
+          type: string
+          
+    put:
+      summary: Actualizamos una mascota
+      description: Actualiza los detalles de una mascota existente.
+      tags:
+        - Pets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+      responses:
+        "200":
+          description: Mascota actualizada correctamente
+        "404":
+          description: Mascota no encontrada
+        "500":
+          description: Error en el servidor
+
+    delete:
+      summary: Eliminamos una mascota
+      description: Elimina una mascota por su ID.
+      tags:
+        - Pets
+      responses:
+        "200":
+          description: Mascota eliminada correctamente
+        "404":
+          description: Mascota no encontrada
+        "500":
+          description: Error en el servidor
+          
+components:
+  schemas:
+    Pet:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID de la mascota
+        name:
+          type: string
+          description: Nombre de la mascota
+        specie:
+          type: string
+          description: Especie de la mascota
+        birthDate:
+          type: string
+          format: date
+          description: Fecha de nacimiento de la mascota
+        adopted:
+          type: boolean
+          description: Indica si la mascota ha sido adoptada
+          example: false
+        owner:
+          type: string
+          description: ID del propietario de la mascota (referencia a `Users`)
+        image:
+          type: string
+          description: URL de la imagen de la mascota
+      required:
+        - name
+        - specie
+        - birthDate
+      example:
+        id: "1234"
+        name: "Rex"
+        specie: "Perro"
+        birthDate: "2015-06-01"
+        adopted: false
+        owner: "507f191e810c19729de860ea"
+        image: "/public/img/rex.jpg"
+

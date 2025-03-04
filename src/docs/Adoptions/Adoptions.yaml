@@ -1,0 +1,110 @@
+paths:
+  /api/adoptions:
+    get:
+      summary: Obtenemos todas las adopciones de mascotas
+      description: Recupera una lista de todas las adopciones registradas en la base de datos.
+      tags:
+        - Adoptions
+      responses:
+        "200":
+          description: Lista de adopciones recuperada correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  payload:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Adoption'
+        "500":
+          description: Error en el servidor
+
+  /api/adoptions/{aid}:
+    parameters:
+      - name: aid
+        in: path
+        required: true
+        description: ID de la adopción
+        schema:
+          type: string
+          
+    get:
+      summary: Obtenemos una adopción específica por ID
+      description: Recupera los detalles de una adopción mediante su ID.
+      tags:
+        - Adoptions
+      responses:
+        "200":
+          description: Adopción encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Adoption'
+        "404":
+          description: Adopción no encontrada
+        "500":
+          description: Error en el servidor
+
+  /api/adoptions/{uid}/{pid}:
+    parameters:
+      - name: uid
+        in: path
+        required: true
+        description: ID del usuario que adopta la mascota
+        schema:
+          type: string
+      - name: pid
+        in: path
+        required: true
+        description: ID de la mascota a ser adoptada
+        schema:
+          type: string
+
+    post:
+      summary: Creamos una adopción
+      description: Crea una nueva adopción para una mascota, asociando un usuario con la mascota adoptada.
+      tags:
+        - Adoptions
+      responses:
+        "200":
+          description: Mascota adoptada correctamente
+        "400":
+          description: Error al intentar adoptar (p. ej., la mascota ya está adoptada)
+        "404":
+          description: Usuario o mascota no encontrados
+        "500":
+          description: Error en el servidor
+
+components:
+  schemas:
+    Adoption:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID de la adopción
+        owner:
+          type: string
+          description: ID del usuario que adopta la mascota
+        pet:
+          type: string
+          description: ID de la mascota adoptada
+        date:
+          type: string
+          format: date-time
+          description: Fecha y hora de la adopción
+      required:
+        - id
+        - owner
+        - pet
+        - date
+      example:
+        id: "60d5b470f6a74c22c5b48c90"
+        owner: "507f191e810c19729de860ea"
+        pet: "60d5b470f6a74c22c5b48c91"
+        date: "2025-03-03T14:30:00Z"
+

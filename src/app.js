@@ -10,7 +10,24 @@ import mockingRouter from  './routes/mocks.router.js'
 
 import dotenv from 'dotenv';
 
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUiExpress from 'swagger-ui-express';
+
 dotenv.config();
+
+
+const swaggerOptions = {
+    definition: {
+        openapi: "3.0.1",
+        info: {
+            title: "Documentación de 🐶Adoptame😺", 
+            description: "App dedicada a encontrar familias para los perritos o gatitos de la calle"
+        }
+    }, 
+    apis: ["./src/docs/**/*.yaml"]
+}
+
+const specs = swaggerJSDoc(swaggerOptions);
 
 const app = express();
 const PORT = process.env.PORT||8080;
@@ -29,5 +46,6 @@ app.use('/api/pets',petsRouter);
 app.use('/api/adoptions',adoptionsRouter);
 app.use('/api/sessions',sessionsRouter);
 app.use('/api/mocks', mockingRouter);
+app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs)); 
 
 app.listen(PORT,()=>console.log(`Listening on ${PORT}`))

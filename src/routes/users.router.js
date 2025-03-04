@@ -6,6 +6,10 @@ const router = Router();
 router.get('/',usersController.getAllUsers);
 
 router.get('/:uid',usersController.getUser);
+
+//Agregamos metodo post
+router.post("/",usersController.createUser);
+
 router.put('/:uid',usersController.updateUser);
 router.delete('/:uid',usersController.deleteUser);
 
